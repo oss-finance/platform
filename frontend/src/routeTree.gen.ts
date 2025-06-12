@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as PipelineIndexRouteImport } from './routes/pipeline/index'
 import { Route as KnowledgeIndexRouteImport } from './routes/knowledge/index'
 import { Route as ExploreIndexRouteImport } from './routes/explore/index'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PipelineIndexRoute = PipelineIndexRouteImport.update({
   id: '/pipeline/',
   path: '/pipeline/',
@@ -30,30 +36,34 @@ const ExploreIndexRoute = ExploreIndexRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/explore': typeof ExploreIndexRoute
   '/knowledge': typeof KnowledgeIndexRoute
   '/pipeline': typeof PipelineIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/explore': typeof ExploreIndexRoute
   '/knowledge': typeof KnowledgeIndexRoute
   '/pipeline': typeof PipelineIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/explore/': typeof ExploreIndexRoute
   '/knowledge/': typeof KnowledgeIndexRoute
   '/pipeline/': typeof PipelineIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/explore' | '/knowledge' | '/pipeline'
+  fullPaths: '/' | '/explore' | '/knowledge' | '/pipeline'
   fileRoutesByTo: FileRoutesByTo
-  to: '/explore' | '/knowledge' | '/pipeline'
-  id: '__root__' | '/explore/' | '/knowledge/' | '/pipeline/'
+  to: '/' | '/explore' | '/knowledge' | '/pipeline'
+  id: '__root__' | '/' | '/explore/' | '/knowledge/' | '/pipeline/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   ExploreIndexRoute: typeof ExploreIndexRoute
   KnowledgeIndexRoute: typeof KnowledgeIndexRoute
   PipelineIndexRoute: typeof PipelineIndexRoute
@@ -61,6 +71,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pipeline/': {
       id: '/pipeline/'
       path: '/pipeline'
@@ -86,6 +103,7 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   ExploreIndexRoute: ExploreIndexRoute,
   KnowledgeIndexRoute: KnowledgeIndexRoute,
   PipelineIndexRoute: PipelineIndexRoute,
