@@ -1,3 +1,4 @@
+import { NotebookEditor } from "@/components/custom/notebook-editor";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/explore/")({
@@ -6,9 +7,8 @@ export const Route = createFileRoute("/explore/")({
 
 function ExploreView() {
   return (
-    <div>
-      <h1>Explore View</h1>
-      <p>This is the interactive notebook for research and discovery.</p>
+    <div className="h-full w-full">
+      <NotebookEditor />
     </div>
   );
 }

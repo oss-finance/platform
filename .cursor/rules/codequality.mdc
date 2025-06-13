@@ -9,6 +9,11 @@ globs:
 ---
 # Code Quality Guidelines
 
+## if Statement Braces
+Always use curly braces for if statements, even for single-line bodies.
+Format: if (condition) { statement; }
+Incorrect: if (condition) statement;
+
 ## Verify Information
 Always verify information before presenting it. Do not make assumptions or speculate without clear evidence.
 
