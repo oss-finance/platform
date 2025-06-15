@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Play, Plus, Trash2, Loader2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { isEmpty } from "radash";
+import { cn } from "@/lib/utils";
 
 interface Cell {
   id: string;
@@ -19,17 +21,41 @@ const NotebookCell: React.FC<{
   onCellAdd: (id: string) => void;
 }> = ({ cell, onCellUpdate, onCellRun, onCellDelete, onCellAdd }) => {
   return (
-    <Card className="relative group">
+    <Card className="group">
       <CardContent className="p-2">
         <div className="flex flex-col space-y-2">
-          <div className="w-full">
+          <div className="relative w-full">
             <Textarea
               value={cell.input}
               onChange={(e) => onCellUpdate(cell.id, e.target.value)}
               placeholder="Enter your query or code here..."
-              className="w-full border-none focus:ring-0 resize-none font-mono"
+              className="w-full border-none focus:ring-0 resize-none font-mono p-4 pr-40 break-all"
               rows={3}
             />
+            <div className="absolute top-2 right-2 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity bg-background p-1 rounded-lg border">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onCellRun(cell.id)}
+                disabled={cell.isLoading}
+              >
+                <Play className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onCellAdd(cell.id)}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onCellDelete(cell.id)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
           {cell.isLoading && (
             <div className="flex items-center space-x-2 p-4 bg-muted rounded-md">
@@ -46,26 +72,6 @@ const NotebookCell: React.FC<{
           )}
         </div>
       </CardContent>
-      <div className="absolute top-2 right-2 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onCellRun(cell.id)}
-          disabled={cell.isLoading}
-        >
-          <Play className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" onClick={() => onCellAdd(cell.id)}>
-          <Plus className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onCellDelete(cell.id)}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
     </Card>
   );
 };
@@ -79,7 +85,9 @@ const createNewCell = (input = ""): Cell => ({
 
 export const NotebookEditor: React.FC = () => {
   const [cells, setCells] = useState<Cell[]>([]);
+  const hasCells = !isEmpty(cells);
 
+  // TODO: The logic will be implemented differently (now just for demonstration)
   const handleUpdateCell = (id: string, input: string) => {
     setCells((prevCells) =>
       prevCells.map((cell) => (cell.id === id ? { ...cell, input } : cell))
@@ -159,10 +167,18 @@ export const NotebookEditor: React.FC = () => {
         <Button
           onClick={handleAddCellAtEnd}
           variant="outline"
-          className="w-full cursor-pointer"
+          className={cn("w-full cursor-pointer", hasCells && "w-1/2")}
         >
           <Plus className="h-4 w-4" />
           Add Cell
+        </Button>
+        <Button
+          onClick={handleAddCellAtEnd}
+          variant="outline"
+          className={cn("w-1/2 cursor-pointer", hasCells ? "flex" : "hidden")}
+        >
+          <Plus className="h-4 w-4" />
+          Add to Pipeline
         </Button>
       </div>
     </div>

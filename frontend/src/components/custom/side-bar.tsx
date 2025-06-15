@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
 import { Link } from "@tanstack/react-router";
-import { Book, Columns3, Search } from "lucide-react";
+import { Columns3, Search } from "lucide-react";
 
 export const SideBar = () => {
   return (
@@ -21,7 +21,12 @@ export const SideBar = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link to="/explore">
+                  <Link
+                    to="/explore"
+                    activeProps={{
+                      className: "bg-secondary text-secondary-foreground",
+                    }}
+                  >
                     <Search />
                     Explore
                   </Link>
@@ -29,17 +34,14 @@ export const SideBar = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link to="/pipeline">
+                  <Link
+                    to="/pipeline"
+                    activeProps={{
+                      className: "bg-secondary text-secondary-foreground",
+                    }}
+                  >
                     <Columns3 />
                     Pipeline
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/knowledge">
-                    <Book />
-                    Knowledge
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
