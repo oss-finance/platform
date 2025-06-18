@@ -5,13 +5,13 @@ from app.services.pipeline_service import PipelineService, get_pipeline_service
 router = APIRouter()
 
 
-@router.post("/execute", response_model=PipelineResponse)
-async def execute_pipeline(
+@router.get("/", response_model=PipelineResponse)
+async def get_pipelines(
     request: PipelineRequest,
     pipeline_service: PipelineService = Depends(get_pipeline_service),
 ):
     """
-    Execute a pipeline operation.
+    Get all pipelines.
 
     Args:
         request: The pipeline request with action and parameters
@@ -20,31 +20,8 @@ async def execute_pipeline(
     Returns:
         PipelineResponse with status, message, and optional data
     """
-    result = await pipeline_service.execute_pipeline(
-        action=request.action,
-        parameters=request.parameters,
+    return PipelineResponse(
+        status="success",
+        message="Pipelines fetched successfully",
+        data=[],
     )
-
-    return PipelineResponse(**result)
-
-
-@router.get("/status/{pipeline_id}")
-async def get_pipeline_status(
-    pipeline_id: str,
-):
-    """
-    Get the status of a specific pipeline.
-
-    Args:
-        pipeline_id: The ID of the pipeline to check
-
-    Returns:
-        Pipeline status information
-    """
-    # Placeholder implementation
-    return {
-        "pipeline_id": pipeline_id,
-        "status": "running",
-        "progress": 75,
-        "message": "Pipeline is processing data",
-    }
