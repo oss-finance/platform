@@ -18,7 +18,35 @@
 3. Run the development server:
    
    ```bash
-   uvicorn main:app --reload
+   uvicorn app.main:app --reload
    ```
 
-The API will be available at http://localhost:8000 
+The API will be available at http://localhost:8000
+
+## Testing
+
+### Running Tests
+
+To run all tests:
+
+```bash
+pytest
+```
+
+To run tests with verbose output:
+
+```bash
+pytest -v
+```
+
+To run tests in a specific file:
+
+```bash
+pytest tests/test_main.py
+```
+
+To run tests with coverage:
+
+```bash
+pytest --cov=app
+```
