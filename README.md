@@ -9,7 +9,7 @@ This repository contains a full-stack web application structured as a monorepo.
 
 ## Next steps
 
-- Get all books, and store it.
-- Add RAG tool.
-- Add stock API tools.
-- Connect w/ frontend.
+- [] Build data-pipeline
+- [] Build backend for explore tab
+- [] Connect backend with frontend 
+- [] Deploy (the first prototype) 
