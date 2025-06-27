@@ -84,7 +84,7 @@ const createNewCell = (input = ""): Cell => ({
 });
 
 export const NotebookEditor: React.FC = () => {
-  const [cells, setCells] = useState<Cell[]>([]);
+  const [cells, setCells] = useState<Cell[]>([createNewCell()]);
   const hasCells = !isEmpty(cells);
 
   // TODO: The logic will be implemented differently (now just for demonstration)
