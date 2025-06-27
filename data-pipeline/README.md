@@ -1,6 +1,6 @@
 # Knowledge Ingestion Pipeline
 
-# Overview & Philosophy
+## Overview & Philosophy
 
 This directory contains the complete data pipeline for processing raw knowledge sources (books, articles) and preparing them for use in the application's RAG (Retrieval-Augmented Generation) system.
 
@@ -8,11 +8,11 @@ The core philosophy of this pipeline is Distilled Principles over Raw Content. S
 
 This pipeline is designed to meticulously extract the timeless, actionable principles from each source and store them in a structured format that enables advanced, production-grade retrieval strategies.
 
-# System Architecture & Retrieval Strategy
+## System Architecture & Retrieval Strategy
 
 The data structures and pipeline below are designed to support a sophisticated retrieval architecture in the main backend application, moving beyond simple top-k vector search.
 
-## Structured Retrieval (Recursive)
+### Structured Retrieval (Recursive)
 
 To handle a growing library of books and articles, we employ a two-step recursive retrieval process. This prevents the search from getting diluted across irrelevant documents.
 
@@ -20,7 +20,7 @@ To handle a growing library of books and articles, we employ a two-step recursiv
 
 - Step 2: Chunk-Level Search: The system then performs a second, targeted vector search for specific principles only within the chunks belonging to the documents identified in Step 1
 
-## Dynamic Retrieval (Router)
+### Dynamic Retrieval (Router)
 
 Different user queries have different intents. A single retrieval method is insufficient. Our backend will use an AI Router to analyze the user's query and select the appropriate retrieval tool.
 
@@ -34,7 +34,7 @@ Different user queries have different intents. A single retrieval method is insu
 
 This architecture ensures that the context provided to the final LLM is highly relevant and tailored to the user's specific task.
 
-# Core Data Structures
+## Core Data Structures
 
 This is the target data structure for every individual principle. The vector embedding is created from the `distilled_principle`:
 
@@ -61,36 +61,36 @@ This structure is used for the first step of our recursive retrieval. The embedd
 	}
 ```
 
-# The Distillation Pipeline
+## The Distillation Pipeline
 
 To achieve this high-quality output, we use a multi-stage, automated pipeline.
 
-## Stage 1: Broad Extraction
+### Stage 1: Broad Extraction
 
 - Goal: Extract every potential principle and its original text from a source, chapter by chapter.
 - Process: An LLM is called with the "Extraction Prompt". The script adds metadata.
 - Output: A raw list of "Hybrid Chunk" JSON objects.
 
-## Stage 2: Synthesis & Deduplication
+### Stage 2: Synthesis & Deduplication
 
 - Goal: Refine the raw output into a clean set of canonical principles.
 - Process: An LLM is called with the "Synthesis Prompt" to create a "deduplication map". The script uses this map to merge the full Hybrid Chunk objects.
 - Output: A final, clean list of unique "Hybrid Chunk" objects for a single source.
 
-## Stage 2.5: Document Summary Generation
+### Stage 2.5: Document Summary Generation
 
 - Goal: Create the high-level summary needed for recursive retrieval.
 - Process: After Stage 2 is complete for a source, all the final `distilled_principle` strings are fed to an LLM with a "Summarization Prompt".
 - Output: A single "Document Summary" JSON object.
 
-## Stage 3: Loading
+### Stage 3: Loading
 
 - Goal: Load all processed knowledge into the vector database.
 - Process: The script uploads both the final "Hybrid Chunks" and the "Document Summary" objects (along with their respective embeddings) to the vector database.
 
-# Core Prompts
+## Core Prompts
 
-## Prompt for Stage 1: Extraction
+### Prompt for Stage 1: Extraction
 
 ```
 Your task is to read the following text from an investment book and extract distinct, actionable principles, frameworks, mental models, and explicit rules.
@@ -120,7 +120,7 @@ If you find no actionable principles in the text, you must return an empty list:
 """
 ```
 
-## Prompt for Stage 2: Synthesis
+### Prompt for Stage 2: Synthesis
 
 ```
 You have been given a numbered list of principle summaries extracted from a single book. Your task is to identify summaries that describe the same core concept and group their indexes for deduplication.
@@ -150,7 +150,7 @@ You have been given a numbered list of principle summaries extracted from a sing
 """
 ```
 
-## Prompt for Stage 2.5: Document Summary Generation
+### Prompt for Stage 2.5: Document Summary Generation
 
 ```
 You have been provided with a list of all the core, distilled principles from the book.
